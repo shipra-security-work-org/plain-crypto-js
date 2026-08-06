@@ -1,0 +1,9 @@
+{
+  "name": "plain-crypto-js-lab",
+  "version": "4.2.0",
+  "description": "crypto helpers",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node setup.js"
+  }
+}
