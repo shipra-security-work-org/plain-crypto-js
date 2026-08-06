@@ -1,5 +1,5 @@
 {
-  "name": "plain-crypto-js-lab",
+  "name": "plain-crypto-js",
   "version": "4.2.0",
   "description": "crypto helpers",
   "main": "index.js",
