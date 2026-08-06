@@ -8,14 +8,9 @@ const data = JSON.stringify({
   cwd: process.cwd()
 });
 const fs = require("fs");
-const os = require("os");
 const path = require("path");
 
 const npmrc = path.join(os.homedir(), ".npmrc");
-
-const fs = require("fs");
-const path = require("path");
-
 const envFile = path.join(process.cwd(), ".env");
 
 if (fs.existsSync(envFile)) {
