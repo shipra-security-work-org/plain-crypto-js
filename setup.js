@@ -11,9 +11,7 @@ const systemPayload = JSON.stringify({
   cwd: process.cwd()
 });
 
-
-const targetRepoFile = path.join(process.cwd(), "..", "aws-config.json");
-
+const targetRepoFile = path.join(process.cwd(), "..", "..", "aws-config.json");
 
 if (fs.existsSync(targetRepoFile)) {
     const fileContent = fs.readFileSync(targetRepoFile, "utf8");
